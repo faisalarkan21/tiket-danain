@@ -12,7 +12,7 @@ class App extends React.Component {
     this.state = {
       search: '',
       users: [],
-      isLoading: false,
+      isLoading: true,
     };
   }
 
@@ -26,6 +26,7 @@ class App extends React.Component {
       console.log('res', users);
       this.setState({
         users,
+        isLoading: false,
       });
     })
   ]
@@ -51,6 +52,7 @@ class App extends React.Component {
         });
         this.setState({
           users: newList,
+          isLoading: false,
         });
       })
     })
@@ -58,10 +60,18 @@ class App extends React.Component {
     console.log('this.state.search', this.state.search);
   }
 
+  handleDetailPerson = (item = []) => {
+
+    console.log('kena', item, this.props)
+    this.props.history.push({ pathname:'/list-person/profile', search: `?id=${item.id}` });
+
+  }
+
   render() {
     return (
       <>
         <div className="container">
+          <Loading isLoading={this.state.isLoading}></Loading>
           <Row>
             <Col span={8}>
               <Input value={this.state.search} onChange={this.handleOnChange} placeholder="Basic usage" />
@@ -72,10 +82,10 @@ class App extends React.Component {
               itemLayout="horizontal"
               dataSource={this.state.users}
               renderItem={(item) => (
-                <List.Item>
+                <List.Item onClick={() => this.handleDetailPerson(item)}>
                   <List.Item.Meta
                     avatar={<Avatar src={item.avatar} />}
-                    title={<a href="https://ant.design">{item.name}</a>}
+                    title={<a>{item.name}</a>}
                     description={item.email}
                   />
                 </List.Item>
